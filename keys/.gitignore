@@ -1,0 +1,8 @@
+*.guid
+*.pem
+*.key
+*.esl
+*.auth
+PK.h
+KEK.h
+DB.h

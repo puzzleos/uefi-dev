@@ -1,0 +1,10 @@
+extra/
+.tpm2/
+version.txt
+version.raw
+*.o
+*.so
+*.fd
+*.efi
+*.iso
+*.img
