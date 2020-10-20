@@ -35,7 +35,7 @@ FS_ESP_DEPS = \
 FS_ESP_BUFFER = 8388608
 
 .PHONY: all
-all: build
+all: help
 
 .PHONY: help
 help:
