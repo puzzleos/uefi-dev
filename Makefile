@@ -65,7 +65,7 @@ version.txt: version.raw
 	diff -q version.raw $@ || cp version.raw $@
 
 fs_esp.img: version.txt
-	size=$$(du -c ${FS_ESP_DEPS} | tail -n 1 | awk '{ print $$1 }'); \
+	size=$$(du -b -c ${FS_ESP_DEPS} | tail -n 1 | awk '{ print $$1 }'); \
 		guestfish -N $@=disk:$$(( $$size + ${FS_ESP_BUFFER} )) quit
 	guestfish -a $@ run : part-disk /dev/sda gpt
 	guestfish -a $@ run : part-set-gpt-type /dev/sda 1 "C12A7328-F81F-11D2-BA4B-00A0C93EC93B"
