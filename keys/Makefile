@@ -91,7 +91,7 @@ DB-rand.pem:
 	uuidgen -r > DB-rand.guid
 
 DB.esl: DB-ms.esl DB-extra.esl
-	cat $$(find . -name "DB-*.esl") > $@
+	cat $^ > $@
 
 DB-ms.esl: DB-ms
 	diff -q DB-ms/DB-ms.esl $@ || cp DB-ms/DB-ms.esl $@
