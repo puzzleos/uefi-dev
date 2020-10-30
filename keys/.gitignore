@@ -1,5 +1,6 @@
 *.guid
 *.pem
+*.der
 *.key
 *.esl
 *.auth

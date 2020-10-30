@@ -1,5 +1,6 @@
-extra/
 .tpm2/
+extra/
+fs_virtfs/*
 version.txt
 version.raw
 *.o
