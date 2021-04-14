@@ -25,15 +25,6 @@ SUBDIRS = \
 	keys \
 	misc
 
-# files to include in the fs_esp.img
-FS_ESP_DEPS = \
-	keys/*.efi \
-	misc/*.efi \
-	fs_esp/*
-
-# extra fs space (in bytes) to allocate for the fs_esp.img
-FS_ESP_BUFFER = 8388608
-
 .PHONY: all
 all: help
 
@@ -64,26 +55,13 @@ version.raw: build
 version.txt: version.raw
 	diff -q version.raw $@ || cp version.raw $@
 
-fs_esp.img: version.txt
-	size=$$(du -b -c ${FS_ESP_DEPS} | tail -n 1 | awk '{ print $$1 }'); \
-		guestfish -N $@=disk:$$(( $$size + ${FS_ESP_BUFFER} )) quit
-	guestfish -a $@ run : part-disk /dev/sda gpt
-	guestfish -a $@ run : part-set-gpt-type /dev/sda 1 "C12A7328-F81F-11D2-BA4B-00A0C93EC93B"
-	guestfish -a $@ run : mkfs vfat /dev/sda1
-	(tar cf - version.txt) \
-		| guestfish -a $@ run : mount /dev/sda1 / : tar-in - /
-	for i in ${FS_ESP_DEPS}; do \
-		(cd $$(dirname $$i); tar cf - $$(basename $$i)) \
-		 | guestfish -a $@ run : mount /dev/sda1 / : tar-in - /; \
-	done
-
 ovmf_fw.fd:
 	cp ${OVMF_CODE} $@
 ovmf_vars.fd:
 	cp ${OVMF_VARS} $@
 
 .PHONY: qemu-esp
-qemu-esp: ovmf_fw.fd ovmf_vars.fd fs_esp.img
+qemu-esp: ovmf_fw.fd ovmf_vars.fd
 	# NOTE: swtpm normally exits when qemu exits, no need to cleanup
 	[ -d .tpm2 ] || mkdir .tpm2
 	(swtpm socket --tpmstate dir=.tpm2 --tpm2 \
@@ -91,7 +69,7 @@ qemu-esp: ovmf_fw.fd ovmf_vars.fd fs_esp.img
 	${QEMU_CMD_CORE}
 
 .PHONY: qemu-full
-qemu-full: ovmf_fw.fd ovmf_vars.fd fs_esp.img
+qemu-full: ovmf_fw.fd ovmf_vars.fd
 	# NOTE: swtpm normally exits when qemu exits, no need to cleanup
 	[ -d .tpm2 ] || mkdir .tpm2
 	(swtpm socket --tpmstate dir=.tpm2 --tpm2 \
@@ -102,7 +80,7 @@ qemu-full: ovmf_fw.fd ovmf_vars.fd fs_esp.img
 
 .PHONY: clean
 clean:
-	${RM} -f fs_esp.img version.txt
+	${RM} -f version.txt
 	for i in ${SUBDIRS}; do \
 		${MAKE} -C $$i $@; \
 	done

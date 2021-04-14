@@ -12,12 +12,10 @@ packages for each of the projects.
  * https://github.com/stefanberger/libtpms
  * https://github.com/stefanberger/swtpm
 
-The efitools tool suite and and guestfish tool are also used to create and
-package the UEFI Secure Boot variables as well as dynamically create disks for
-testing, but neither is part of the UEFI Secure Boot chain.
+The efitools tool suite is also used to create and package the UEFI Secure Boot
+variables for testing, but it is not part of the UEFI Secure Boot chain.
 
  * https://git.kernel.org/pub/scm/linux/kernel/git/jejb/efitools.git
- * https://libguestfs.org/guestfish.1.html
 
 ## How The Development Environment Works
 
@@ -48,8 +46,8 @@ in the project's base directory named "distro.iso".  With these disk images in
 place you can run `make qemu-full` to start QEMU with the disk images attached.
 
 In order to make it easier to transfer files to and from an installed Linux
-system, the "fs_virtfs/" directory is exported as a Plan 9 filesystem in the guest
-using the "virtfs0" mount tag.
+system, the "fs_virtfs/" directory is exported as a Plan 9 filesystem in the
+guest using the "virtfs0" mount tag.
 
 Build time configuration can be found in the "make.conf" file in the project's
 base directory.
@@ -87,8 +85,8 @@ recreated the next time you start QEMU.
 ## Adding UEFI Test Applications
 
 Any files, including UEFI applications, placed in the "fs_esp/" directory will
-be copied into the dedicated FAT filesystem/disk attached to QEMU.  The disk
-will be sized as needed to fit all of the files.
+be included in a dynamically generated FAT filesystem/disk created by QEMU at
+runtime.
 
 Signing EFI binaries is beyond the scope of the tools presented here, but there
 are two projects that offer tools to sign EFI binaries in such a way that they
