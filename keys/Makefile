@@ -59,11 +59,11 @@ PK.auth: PK.esl PK.key PK.pem
 		$$(echo $< | sed 's/\.[^\.]\+$$//') $< $@
 
 KEK.auth: KEK.esl PK.key PK.pem
-	sign-efi-sig-list -k PK.key -c PK.pem \
+	sign-efi-sig-list -a -k PK.key -c PK.pem \
 		$$(echo $< | sed 's/\.[^\.]\+$$//') $< $@
 
 DB.auth: DB.esl KEK.key KEK.pem
-	sign-efi-sig-list -k KEK.key -c KEK.pem \
+	sign-efi-sig-list -a -k KEK.key -c KEK.pem \
 		$$(echo $< | sed 's/\.[^\.]\+$$//') $< $@
 
 PK.guid: PK.pem
