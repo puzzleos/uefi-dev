@@ -23,7 +23,6 @@ include make.conf
 SUBDIRS = \
 	libefihelpers \
 	keys \
-	misc \
 	utils
 
 .PHONY: all
