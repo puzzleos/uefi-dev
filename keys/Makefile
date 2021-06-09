@@ -20,6 +20,8 @@
 
 include ../make.conf
 
+LIBEFIHELPER = ../libefihelpers/libefihelpers.a
+
 SETUP_OBJS = \
 	sb_setup.o
 
@@ -28,21 +30,15 @@ CFLAGS += -I../libefihelpers
 .PHONY: all
 all: build
 
+.PHONY: build
 build: sb_setup.efi
 
-../libefihelpers/libefihelpers.a:
+sb_setup.so: ${SETUP_OBJS} ${LIBEFIHELPER}
+
+${LIBEFIHELPER}:
 	${MAKE} -C ../libefihelpers build
 
 sb_setup.o: PK.h KEK.h DB.h
-
-sb_setup.so: ${SETUP_OBJS} ../libefihelpers/libefihelpers.a
-	${LD} ${LDFLAGS} ${SETUP_OBJS} -o $@ \
-		-lefi -lgnuefi ../libefihelpers/libefihelpers.a
-
-%.efi: %.so
-	objcopy -j .text -j .sdata -j .data -j .dynamic \
-		-j .dynsym  -j .rel -j .rela -j .reloc \
-		--target=efi-app-${ARCH} $^ $@
 
 %.h: %.auth
 	xxd -i $< > $@

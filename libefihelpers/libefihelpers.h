@@ -57,6 +57,9 @@ void dbg_sleep(unsigned int count);
 
 void print_hexdump(void *buf, unsigned int buf_len);
 
+#define sleep(X) \
+	(BS->Stall(X * 1000000))
+
 /*
  * dynamic memory api
  */
@@ -81,6 +84,14 @@ EFI_STATUS var_set_raw_attr(EFI_GUID scope, CHAR16 *name, UINT32 attr,
 			    UINTN len, const void *val);
 EFI_STATUS var_set_raw(EFI_GUID scope, CHAR16 *name,
 		       UINTN len, const void *val);
+EFI_STATUS var_set_attr(EFI_GUID scope, CHAR16 *name, UINT32 attr,
+			const struct uefi_var *var);
 EFI_STATUS var_set(EFI_GUID scope, CHAR16 *name, const struct uefi_var *var);
+
+/*
+ * uefi shim sbat api
+ */
+
+extern const EFI_GUID SBAT_GUID;
 
 #endif /* __LIBEFIHELPERS_H */

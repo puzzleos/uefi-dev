@@ -21,7 +21,7 @@
 include ../make.conf
 
 OBJS = \
-	mem.o print.o
+	mem.o print.o sbat.o
 
 .PHONY: all
 all: build

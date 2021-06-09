@@ -7,5 +7,6 @@ version.raw
 *.so
 *.fd
 *.efi
+*.signed
 *.iso
 *.img

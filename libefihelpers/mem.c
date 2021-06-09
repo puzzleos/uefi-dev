@@ -162,9 +162,10 @@ err:
 }
 
 /**
- * Set a UEFI variable
+ * Set a UEFI variable with attributes
  * @scope: variable scope guid
  * @name: variable name
+ * @attr: variable attributes
  * @len: length of variable
  * @val: value
  */
@@ -172,7 +173,6 @@ EFI_STATUS var_set_raw_attr(EFI_GUID scope, CHAR16 *name, UINT32 attr,
 			    UINTN len, const void *val)
 {
 	EFI_STATUS rc;
-
 	rc = uefi_call_wrapper(RT->SetVariable, 5,
 			       name, &scope, attr, len, val);
 	return rc;
@@ -190,12 +190,25 @@ EFI_STATUS var_set_raw(EFI_GUID scope, CHAR16 *name,
 {
 	UINT32 attr;
 
-	/* NOTE: assume these attributes are reasonable for most vars */
+	/* NOTE: pick basic attributes, use var_set_raw_attr() for others */
 	attr = (EFI_VARIABLE_NON_VOLATILE |
 		EFI_VARIABLE_BOOTSERVICE_ACCESS |
 		EFI_VARIABLE_RUNTIME_ACCESS);
 
 	return var_set_raw_attr(scope, name, attr, len, val);
+}
+
+/**
+ * Set a UEFI variable with attributes
+ * @scope: variable scope guid
+ * @name: variable name
+ * @attr: variable attributes
+ * @var: variable struct
+ */
+EFI_STATUS var_set_attr(EFI_GUID scope, CHAR16 *name, UINT32 attr,
+			const struct uefi_var *var)
+{
+	return var_set_raw_attr(scope, name, attr, var->len, var->val);
 }
 
 /**

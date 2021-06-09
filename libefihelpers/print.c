@@ -52,27 +52,20 @@ unsigned int dbg_enabled(void)
  * Sleep for a period of time
  * @count: a relative period of time to sleep, 0 for default
  *
- * Unfortunately there doesn't appear to be an easy way to sleep for a
- * specified amount of time so we go into a busy loop to stall execution.
- * Needless to say this if a pretty ugly thing to do, but it works for now and
- * it isn't worth trying to come up with something more elegant at the moment.
- *
- * If debugging is not enabled, this becomes a no-op.
+ * @count should be equate to seconds in the function below.  If debugging is
+ * not enabled, this becomes a no-op.
  *
  */
 #define _SLEEP_DEFAULT    1
 void dbg_sleep(unsigned int count)
 {
-	unsigned int i, j;
-
 	if (!dbg_enabled())
 		return;
 
 	if (count == 0)
 		count = _SLEEP_DEFAULT;
 
-	for (i = 0; i < count; i++)
-		for (j = 0; j < 0xffffffff; j++);
+	gBS->Stall(count * 1000000);
 }
 
 /**
