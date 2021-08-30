@@ -1,0 +1,12 @@
+#!/bin/sh
+
+[ -d .tpm2 ] || mkdir .tpm2
+if [ -f .tpm2/pid ]; then
+    kill -9 $(<.tpm2/pid) || true
+    rm .tpm2/pid
+fi
+rm -f .tpm2/swtpm-sock
+swtpm socket --tpmstate dir=.tpm2 --tpm2 \
+    --ctrl type=unixio,path=.tpm2/swtpm-sock \
+    --pid file=.tpm2/pid &
+while [ ! -e .tpm2/swtpm-sock ]; do sleep 1; done

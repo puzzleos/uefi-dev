@@ -62,18 +62,13 @@ ovmf_vars.fd:
 
 .PHONY: qemu-esp
 qemu-esp: ovmf_fw.fd ovmf_vars.fd
-	# NOTE: swtpm normally exits when qemu exits, no need to cleanup
-	[ -d .tpm2 ] || mkdir .tpm2
-	(swtpm socket --tpmstate dir=.tpm2 --tpm2 \
-		--ctrl type=unixio,path=.tpm2/swtpm-sock &)
+	./tools/run-sw-tpm
 	${QEMU_CMD_CORE}
 
 .PHONY: qemu-full
 qemu-full: ovmf_fw.fd ovmf_vars.fd
-	# NOTE: swtpm normally exits when qemu exits, no need to cleanup
-	[ -d .tpm2 ] || mkdir .tpm2
-	(swtpm socket --tpmstate dir=.tpm2 --tpm2 \
-		--ctrl type=unixio,path=.tpm2/swtpm-sock &)
+	./tools/run-sw-tpm
+	echo ready
 	${QEMU_CMD_CORE} \
 		-drive if=virtio,format=raw,cache=none,file=drive_qemu.img \
 		-drive file=distro.iso,media=cdrom
