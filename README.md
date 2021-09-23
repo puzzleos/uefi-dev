@@ -1,6 +1,5 @@
 QEMU UEFI Secure Boot Development Environment
 ===============================================================================
-Contact: pmoore2@cisco.com or paul@paul-moore.com
 
 This repository provides a UEFI Secure Boot development environment based on
 QEMU, OVMF, and the libtpms/swtpm TPM emulator.  Links to all of these
