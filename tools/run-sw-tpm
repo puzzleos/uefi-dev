@@ -1,6 +1,11 @@
 #!/bin/sh
 
-[ -d .tpm2 ] || mkdir .tpm2
+mktpm2() {
+	d=$(mktemp -d)
+	ln -s $d .tpm2
+}
+
+[ -d .tpm2 ] || mktpm2
 if [ -f .tpm2/pid ]; then
     kill -9 $(<.tpm2/pid) || true
     rm .tpm2/pid
